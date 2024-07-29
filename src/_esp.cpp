@@ -107,37 +107,12 @@ void calc_speed()
 // speed processing
 void set_speed()
 {
-  speed.first = (dir.first ? 1 : -1) * speed.first;
-  speed.second = (dir.second ? 1 : -1) * speed.second;
-  Serial.printf("%d %d %d %d %d %d %d %d %d %d %d %d || %d %d\n", LJX, LJY, RJX, RJY, L2, L1, R2, R1, UP, DOWN, LEFT, RIGHT, speed.first, speed.second);
-  if (speed.second > 0)
-  {
-    ledcWrite(pulsewm_r, speed.second);
-    digitalWrite(rdrive, LOW);
-  }
-  else if (speed.second < 0)
-  {
-    ledcWrite(pulsewm_r, abs(speed.second));
-    digitalWrite(rdrive, HIGH);
-  }
-  else
-  {
-    ledcWrite(pulsewm_r, 0);
-  }
-  if (speed.first > 0)
-  {
-    ledcWrite(pulsewm_l, speed.first);
-    digitalWrite(ldrive, LOW);
-  }
-  else if (speed.first < 0)
-  {
-    ledcWrite(pulsewm_l, abs(speed.first));
-    digitalWrite(ldrive, HIGH);
-  }
-  else
-  {
-    ledcWrite(pulsewm_l, 0);
-  }
+  ledcWrite(pulsewm_r, speed.second);
+  if (speed.second != 0)
+    digitalWrite(rdrive, dir.second ? LOW : HIGH);
+  ledcWrite(pulsewm_l, speed.first);
+  if (speed.first != 0)
+    digitalWrite(ldrive, dir.first ? LOW : HIGH);
 };
 
 void setup_pins()

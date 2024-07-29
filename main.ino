@@ -5,6 +5,15 @@
 #include "esp_gap_bt_api.h"
 #include "esp_err.h"
 
+// #define _FUJI
+
+#ifndef _FUJI
+#include <src/_esp.h>
+#else
+#include <src/fuji.h>
+#endif
+
+
 // #ifdef ps5
 // #define ps5 ps5
 // #else
@@ -34,14 +43,6 @@ void remove_pair()
       esp_bt_gap_remove_bond_device(pairedDeviceBtAddr[i]);
   }
 }
-
-// #define _FUJI
-
-#ifndef _FUJI
-#include <src/_esp.h>
-#else
-#include <src/fuji.h>
-#endif
 
 void loop()
 {

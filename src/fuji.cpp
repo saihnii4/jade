@@ -157,6 +157,7 @@ bool ready() {
     return true;
 }
 
+// no need to set up pins for fuji
 void setup_pins() {
   return;
 }
