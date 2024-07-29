@@ -12,8 +12,8 @@ const int DEADZONE_MIN = -10;
 const int DEADZONE_MAX = 10;
 const int DEADZONE = 0;
 
-#define MAX 600
-#define MIN -600
+#define MAX 800
+#define MIN -800
 const uint8_t pulsewm_r = 16;
 const uint8_t rdrive = 4;
 const uint8_t rsleep = 17;
@@ -86,8 +86,8 @@ void calc_speed()
 
   int raw_speed = accelerate ? ((LJY - DEADZONE) << 1) : (LJY - DEADZONE);
   // Serial.printf("%d %d %d\n", LJY, angle_coeff.first, angle_coeff.second);
-  int r_raw_speed = raw_speed - angle_coeff.second;
-  int l_raw_speed = raw_speed - angle_coeff.first;
+  int r_raw_speed = raw_speed * 3 - angle_coeff.second * 2;
+  int l_raw_speed = raw_speed * 3 - angle_coeff.first * 2;
 
   if (r_raw_speed > MAX)
     r_raw_speed = MAX;
