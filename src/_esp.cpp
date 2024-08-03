@@ -5,15 +5,15 @@ bool active = true;
 bool accelerate = false;
 std::pair<int, int> speed, dir, angle_coeff;
 
-const int turn_speed = 200;
-const int back_speed = 160;
+const int turn_speed = 500;
+const int back_speed = 300;
 
 const int DEADZONE_MIN = -10;
 const int DEADZONE_MAX = 10;
 const int DEADZONE = 0;
 
 #define MAX 800
-#define MIN -800
+#define MIN 0
 const uint8_t pulsewm_r = 16;
 const uint8_t rdrive = 4;
 const uint8_t rsleep = 17;
@@ -45,14 +45,14 @@ void calc_speed()
     if (RJX > DEADZONE_MAX)
     {
       speed.first = speed.second = turn_speed;
-      dir.first = 1;
-      dir.second = 0;
+      dir.first = 0;
+      dir.second = 1;
     }
     if (RJX < DEADZONE_MIN)
     {
       speed.first = speed.second = turn_speed;
-      dir.first = 0;
-      dir.second = 1;
+      dir.first = 1;
+      dir.second = 0;
     }
     return;
   }
@@ -83,12 +83,12 @@ void calc_speed()
       angle_coeff.second = 0;
     }
   }
-
+  // TODO: fine-tuning
   int raw_speed = accelerate ? ((LJY - DEADZONE) << 1) : (LJY - DEADZONE);
-  // Serial.printf("%d %d %d\n", LJY, angle_coeff.first, angle_coeff.second);
-  int r_raw_speed = raw_speed * 3 - angle_coeff.second * 2;
-  int l_raw_speed = raw_speed * 3 - angle_coeff.first * 2;
+  int r_raw_speed = raw_speed * 4 - angle_coeff.second * 2;
+  int l_raw_speed = raw_speed * 4 - angle_coeff.first * 2;
 
+  // boundary conditions
   if (r_raw_speed > MAX)
     r_raw_speed = MAX;
   if (l_raw_speed > MAX)
@@ -107,12 +107,13 @@ void calc_speed()
 // speed processing
 void set_speed()
 {
-  ledcWrite(pulsewm_r, speed.second);
-  if (speed.second != 0)
-    digitalWrite(rdrive, dir.second ? LOW : HIGH);
-  ledcWrite(pulsewm_l, speed.first);
-  if (speed.first != 0)
-    digitalWrite(ldrive, dir.first ? LOW : HIGH);
+  Serial.printf("%d %d %d %d\n", speed.first, speed.second, dir.first, dir.second);
+  ledcWriteChannel(5, speed.second);
+  if (speed.second != 0 && dir.second != 2)
+    digitalWrite(rdrive, dir.second ? HIGH : LOW);
+  ledcWriteChannel(4, speed.first);
+  if (speed.first != 0 && dir.first != 2)
+    digitalWrite(ldrive, dir.first ? HIGH : LOW);
 };
 
 void setup_pins()
@@ -124,8 +125,8 @@ void setup_pins()
   pinMode(ldrive, OUTPUT);
   pinMode(lsleep, OUTPUT);
 
-  ledcAttach(pulsewm_r, 12000, 10);
-  ledcAttach(pulsewm_l, 12000, 10);
+  ledcAttachChannel(pulsewm_r, 12000, 10, 5);
+  ledcAttachChannel(pulsewm_l, 12000, 10, 4);
 
   digitalWrite(rsleep, HIGH);
   digitalWrite(lsleep, HIGH);

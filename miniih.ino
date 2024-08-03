@@ -5,7 +5,7 @@
 #include "esp_gap_bt_api.h"
 #include "esp_err.h"
 
-// #define _FUJI
+#define _FUJI
 
 #ifndef _FUJI
 #include <src/_esp.h>
@@ -24,7 +24,10 @@
 // #define MAC "96:80:5e:b7:30:de"
 // #define MAC "40:99:22:90:fc:08"
 // #define MAC "e0:5a:1b:74:05:7c"
-#define MAC "e8:47:3a:a4:fd:4e"
+
+// #define MAC "e8:47:3a:a4:fd:4e"
+// naruto
+#define MAC "d0:bc:c1:92:16:dd"
 
 void remove_pair()
 {
@@ -51,9 +54,6 @@ void loop()
   read();
   calc_speed();
   set_speed();
-  // Serial.println("testiGkung");
-
-  // Serial.printf("%d %d/luu\n", speed.first, speed.second);
 }
 
 void setup()
